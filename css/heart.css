@@ -1,0 +1,45 @@
+/* css/heart.css */
+.comp-heart .heart-wrapper{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background-color:#0b1522;
+  padding:40px;
+}
+
+.comp-heart .heart-heart{
+  height:200px;
+  width:200px;
+  background-color:#ffb600;
+  position:relative;
+  transform:rotate(-45deg);
+  box-shadow:-10px 10px 90px #ffb600;
+  display:flex; justify-content:center; align-items:center;
+  color:black; font-size:14px; text-align:center; padding:20px;
+  cursor:pointer;
+}
+
+.comp-heart .heart-heart p{
+  position:absolute; z-index:1; width:100%;
+  transform:rotate(45deg) translate(0,-50px);
+}
+
+.comp-heart .heart-heart::before,
+.comp-heart .heart-heart::after{
+  content:""; position:absolute; height:200px; width:200px;
+  background-color:#ffb600; border-radius:100px; box-shadow:0 0 90px #ffb600;
+}
+.comp-heart .heart-heart::before{ top:-50%; left:0; }
+.comp-heart .heart-heart::after{ right:-50%; top:0; }
+
+/* animación solo si está la clase .is-beating */
+.comp-heart .heart-heart.is-beating {
+  animation: beat-heart .6s linear infinite;
+}
+
+@keyframes beat-heart{
+  0%{ transform:rotate(-45deg) scale(1.07); }
+  80%{ transform:rotate(-45deg) scale(1); }
+  100%{ transform:rotate(-45deg) scale(0.8); }
+}
+

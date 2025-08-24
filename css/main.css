@@ -1,0 +1,329 @@
+/* css/main.css */
+/* ====== PÁGINA ====== */
+:root{
+  --shell-w: 980px;
+  --gap: 20px;
+  --panel-bg: #fff;
+  --yellow-soft: #fff6c7;
+  --yellow-accent: #ffe066;
+  --yellow-hover: #ffcc33;
+  --yellow-btn-hover: #ffd84d;
+  --frame: clamp(64px, 8vw, 120px);
+}
+html, body{ height:100%; }
+body{ margin:0; background:var(--yellow-soft); display:block; --frame: clamp(64px, 8vw, 120px); }
+
+/* ====== CONTENEDOR CENTRAL ====== */
+.main-wrapper{
+  width: min(var(--shell-w), 92vw);
+  margin: 24px auto 80px;
+  display: grid;
+  row-gap: calc(var(--gap) * 1.2);
+}
+
+/* ====== BARRA DE BOTONES ====== */
+.comp-bar{
+  position: sticky;
+  top: 12px;
+  z-index: 60;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 20px;
+  margin-bottom: 4px;
+  opacity: 0; 
+  pointer-events: none; 
+  transition: opacity .3s;
+
+  background:#ffffffd0;
+  border: 1px solid rgba(255,255,255,.7);
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+.comp-bar.is-visible { opacity: 1; pointer-events: auto; }
+
+.comp-btn{
+  appearance:none; border:0; cursor:pointer;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background:#fff; color:#333;
+  font: 600 14px/1 system-ui, sans-serif;
+  box-shadow: 0 4px 10px rgba(0,0,0,.06);
+  transition: transform .08s ease, background .2s ease, box-shadow .2s ease;
+}
+.comp-btn:hover{
+  background:var(--yellow-btn-hover);
+  box-shadow:0 6px 14px rgba(0,0,0,.08);
+}
+.comp-btn.is-active{
+  background:var(--yellow-accent);
+  box-shadow:0 6px 14px rgba(255,200,50,.25);
+}
+
+/* ====== PANEL ====== */
+.panel{
+  background: var(--panel-bg);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.55);
+  box-shadow: 0 18px 40px rgba(0,0,0,.10);
+  overflow: hidden;
+}
+
+
+/* oculto por defecto + animación */
+.panel-content{
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height .35s ease, opacity .25s ease, transform .25s ease;
+  padding: 0 16px;
+  pointer-events: none;
+}
+.panel.open .panel-content{
+  max-height: 3000px;
+  opacity: 1;
+  transform: translateY(0);
+  padding: 24px 24px 28px;
+  pointer-events: auto;
+}
+
+/* wrappers internos centrados sin romper estilos de los componentes */
+.comp{ width:100%; }
+.comp > .heart-wrapper,
+.comp > .gallery-wrapper,
+.comp > .card-wrapper,
+.comp > .container{
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* mínimos para evitar solapes por absolute internos */
+.comp-heart  { min-height: 260px; }
+.comp-gallery{ min-height: 360px; }
+.comp-card   { min-height: 360px; }
+.comp-letter { min-height: 440px; }
+
+/* medios fluidos */
+.comp img, .comp video, .comp canvas{ max-width:100%; height:auto; }
+
+/* ====== DECORACIONES ESPECÍFICAS ====== */
+/* Corazón: más espacio y halo */
+#panel-heart{ position:relative; overflow:visible; }
+#panel-heart .panel-content{ padding: 36px 28px 46px; }
+#panel-heart .comp-heart{ max-width:1100px; margin:0 auto; }
+
+/* tamaño elástico sin tocar heart.css interno */
+.comp-heart .heart-wrapper{ padding:32px; }
+.comp-heart .heart-heart{ --s: clamp(220px, 36vw, 360px); }
+
+#panel-heart::before{
+  content:"";
+  position:absolute; inset:-16px -16px -24px -16px;
+  border-radius: 26px;
+  background:
+    radial-gradient(60% 50% at 50% 10%, rgba(255,102,153,.30), transparent 60%),
+    radial-gradient(70% 60% at 50% 90%, rgba(255,224,236,.65), transparent 70%);
+  filter: blur(22px);
+  z-index:-1;
+}
+#panel-heart::after{
+  content:"";
+  position:absolute; inset:-8px;
+  pointer-events:none; border-radius:24px;
+  background:
+    radial-gradient(8px 8px at 12% 18%, rgba(255,153,187,.70), transparent 70%),
+    radial-gradient(10px 10px at 84% 14%, rgba(255,120,160,.55), transparent 70%),
+    radial-gradient(7px 7px at 22% 78%, rgba(255,180,205,.60), transparent 70%),
+    radial-gradient(9px 9px at 76% 82%, rgba(255,140,180,.45), transparent 70%),
+    radial-gradient(6px 6px at 48% 10%, rgba(255,200,220,.55), transparent 70%);
+  opacity:.55; filter: blur(.5px);
+  animation: sparkle-move 9s ease-in-out infinite alternate;
+}
+@keyframes sparkle-move{
+  0%{ transform:translateY(-4px); opacity:.55; }
+  100%{ transform:translateY(6px);  opacity:.75; }
+}
+
+/* Galería y Carta: brillo de fondo suave */
+#panel-gallery, #panel-letter{ position:relative; }
+#panel-gallery::before, #panel-letter::before{
+  content:"";
+  position:absolute; inset:-8px;
+  border-radius:24px; z-index:-1;
+  background: radial-gradient(100% 60% at 50% 0%, rgba(255,204,218,.45), transparent 60%);
+  filter: blur(18px);
+}
+
+/* Tarjeta: sombra de apoyo + cinta superior */
+#panel-card{ position:relative; }
+#panel-card::before{
+  content:"";
+  position:absolute; inset:auto 24px -10px 24px; height:26px;
+  background: radial-gradient(60% 100% at 50% 0%, rgba(0,0,0,.12), transparent 70%);
+  z-index:-1;
+}
+#panel-card::after{
+  content:"";
+  position:absolute; top:-10px; left:24px; right:24px; height:10px;
+  border-radius:0 0 8px 8px;
+  background: linear-gradient(90deg, #ffd7e4, #ffe9f0);
+}
+
+body .lovequestion-link[hidden]{
+  display:block;
+  width: max(320px, 40%);
+  margin: 8px auto 0;
+  padding: 12px 24px;
+  text-align:center;
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--yellow-accent);
+  color:#000 !important;
+  text-decoration: none !important;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+  transition: background .2s ease, transform .05s ease;
+}
+body .lovequestion-link:hover{ background: var(--yellow-hover); }
+body .lovequestion-link:active{ transform: translateY(1px); }
+
+/* ====== NEUTRALIZAR GLOBALES DE SUBPROYECTOS ====== */
+body{
+  margin: 0;
+  background: var(--yellow-soft);
+
+  /* 4 bordes con flores (poné tus archivos reales) */
+  background-image:
+    url("../img/muguet1.png"),
+    url("../img/muguet1.png"), 
+    url("../img/muguet1.png"),
+    url("../img/muguet2.png");
+  background-repeat: repeat-y, repeat-y, repeat-x, repeat-x;
+  background-position: left top, right top, top left, bottom left;
+  background-size: var(--frame) auto, var(--frame) auto, auto var(--frame), auto var(--frame);
+  background-attachment: fixed, fixed, fixed, fixed; /* que no “deslicen” al hacer scroll */
+
+  /* reserva espacio para que no se tapen los paneles */
+  padding: var(--frame);
+}
+
+/* ====== ACCESIBILIDAD ====== */
+@media (prefers-reduced-motion: reduce){
+  .panel-content{
+    transition: none;
+    max-height: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    padding: 16px !important;
+  }
+}
+
+/* Ocultar fondo/sombra cuando el panel está cerrado */
+.panel:not(.open){
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* No dibujar decoraciones cuando está cerrado */
+#panel-heart:not(.open)::before,
+#panel-heart:not(.open)::after,
+#panel-gallery:not(.open)::before,
+#panel-letter:not(.open)::before,
+#panel-card:not(.open)::before,
+#panel-card:not(.open)::after{
+  display: none;
+}
+/* Ocultar fondo/sombra cuando el panel está cerrado */
+.panel:not(.open){
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* No dibujar decoraciones cuando está cerrado */
+#panel-heart:not(.open)::before,
+#panel-heart:not(.open)::after,
+#panel-gallery:not(.open)::before,
+#panel-letter:not(.open)::before,
+#panel-card:not(.open)::before,
+#panel-card:not(.open)::after{
+  display: none;
+}
+
+/* Ajustes para evitar doble padding dentro del panel */
+.panel-content > .gallery-wrapper{
+  padding: 0;        /* quita padding extra */
+  background: none;  /* quita color de fondo que mancha */
+  box-shadow: none;  /* limpia sombra interna */
+}
+
+/* Compactar paneles: sin doble padding ni márgenes colapsados */
+.panel-content{ padding: 0 12px; }
+.panel.open .panel-content{ padding: 16px 12px; }
+
+/* Quita el padding/fondo interno de wrappers de componentes */
+.panel-content > .heart-wrapper,
+.panel-content > .gallery-wrapper,
+.panel-content > .card-wrapper,
+.panel-content > .container{
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+/* Elimina márgenes colapsados de contenidos internos */
+.panel-content > *{ margin-block-start: 0; }
+.panel-content > :first-child{ margin-top: 0 !important; }
+.panel-content > :last-child{ margin-bottom: 0 !important; }
+
+/* Títulos internos comunes */
+.comp-gallery h1,
+.comp-letter h1,
+.comp-card h1{
+  margin: 0 0 16px !important;
+  line-height: 1.2;
+}
+
+/* Si aún ves aire arriba/abajo, reduce el gap vertical global */
+.main-wrapper{ row-gap: 16px; column-gap: 12px; }
+
+/* el panel oculto no ocupa espacio */
+.panel[hidden]{ display:none !important; }
+
+/* por si queda alguno cerrado sin hidden */
+.panel:not(.open){
+  height:0; min-height:0;
+  padding:0; border:0; margin:0;
+  overflow:hidden;
+}
+
+.flow-actions { display: flex; justify-content: center; margin: 16px 0; }
+.flow-next { padding: .6rem 1rem; border: 0; border-radius: 999px; cursor: pointer; }
+.comp-btn[disabled] { opacity: .4; cursor: not-allowed; }
+
+/* ... todo tu CSS previo ... */
+
+/* CTA final */
+.footer-cta{ opacity:0; transition:opacity .35s ease; }
+.footer-cta.is-revealed{ opacity:1; }
+.footer-cta[hidden]{ display:none !important; }
+
+.lovequestion-link{
+  display:block;
+  width: max(320px, 40%);
+  margin: 0 auto;
+  padding: 12px 24px;
+  text-align:center;
+  font-size: 18px;
+  font-weight: 600;
+  background:var(--yellow-accent);
+  color:#000 !important;
+  text-decoration:none !important;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+  transition: background .2s ease, transform .05s ease;
+}
+.lovequestion-link:hover{ background:var(--yellow-hover); }
+.lovequestion-link:active{ transform: translateY(1px); }

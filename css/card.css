@@ -1,0 +1,189 @@
+/* ============ CARD ============ */
+.card-wrapper{
+  display:flex;
+  justify-content:center;
+  padding:40px;
+  font-family:'Mochiy Pop P One', sans-serif;
+}
+
+.card-wrapper .valentines-day-card{
+  position:relative;
+  width:300px;
+  height:300px;
+  transform-style:preserve-3d;
+  transform:perspective(2500px);
+}
+
+/* -------- Checkbox y capa de clic -------- */
+.card-wrapper .valentines-day-card input#open{ display:none; }
+.card-wrapper .open{
+  position:absolute; inset:0;
+  background:transparent; z-index:6; cursor:pointer;
+}
+#open:checked + .open{ display:none; } /* al abrir, ya no intercepta */
+
+/* -------- Frente (tapa) -------- */
+.card-wrapper .card-front{
+  position:relative;
+  width:300px; height:300px;
+  background:#fffbe6;
+  transform-origin:left;
+  box-shadow: inset 100px 20px 100px rgba(0,0,0,.15),
+              30px 0 50px rgba(0,0,0,.3);
+  transition:.35s;
+}
+.card-wrapper .card-front:before{
+  content:"";
+  position:absolute; width:280px; height:280px;
+  background:#ffe066; top:10px; left:10px;
+}
+
+/* Apertura de la tapa */
+#open:checked ~ .card-front{
+  transform: rotateY(-155deg);
+  box-shadow: inset 100px 20px 100px rgba(0,0,0,.13),
+              30px 0 50px rgba(0,0,0,.1);
+}
+#open:checked ~ .card-front:before{
+  z-index:5; background:#fffbe6; width:300px; height:300px; top:0; left:0;
+  box-shadow: inset 100px 20px 100px rgba(0,0,0,.1),
+              30px 0 50px rgba(0,0,0,.1);
+}
+
+/* -------- Interior (contenedor) -------- */
+.card-wrapper .card-inside{
+  position:absolute; inset:0;
+  background:#fffdf2;
+  z-index:-1;                    /* queda detrás de la tapa */
+  box-shadow: inset 100px 20px 100px rgba(0,0,0,.18),
+              100px 20px 100px rgba(0,0,0,.08);
+  perspective:2500px;
+  overflow:visible;              /* que la hoja pueda cruzar el lomo */
+}
+
+/* -------- Páginas -------- */
+.card-wrapper .card-inside .page{
+  position:absolute; inset:0;
+  opacity:0;
+  transform:rotateY(0deg);
+  transform-style:preserve-3d;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  pointer-events:none;
+}
+.card-wrapper .card-inside .page.is-active{
+  opacity:1; pointer-events:auto; z-index:2;
+}
+
+/* Papel de la hoja (fondo y sombras) */
+.card-wrapper .card-inside .page::before{
+  content:"";
+  position:absolute; inset:0; z-index:-1;
+  border-radius:8px;
+  background:
+    radial-gradient(120% 80% at 50% 10%, rgba(0,0,0,.06), transparent 60%),
+    linear-gradient(180deg,#fffef8 0%, #f8f3df 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.04),
+              0 12px 28px rgba(0,0,0,.18);
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+}
+
+/* --- NUEVO flujo de paso de página --- */
+/* la página que sale gira y viaja hacia la izquierda (bajo la tapa) */
+.card-wrapper .card-inside .page.turn-over{
+  opacity:1;
+  pointer-events:none;
+  z-index:3;                          /* por encima de la entrante */
+  transform-origin:left center;
+  animation: pageTurnOver .7s cubic-bezier(.2,.7,.2,1) forwards;
+}
+
+/* la siguiente ya se ve debajo durante el giro de la saliente */
+.card-wrapper .card-inside .page.pre-active{
+  opacity:1;
+  pointer-events:none;
+  z-index:1;
+}
+
+/* keyframes: igual ángulo que la tapa + desplazamiento al lomo */
+@keyframes pageTurnOver{
+  0%   { transform: rotateY(0deg)    translateX(0)        translateZ(0.1px); }
+  50%  { transform: rotateY(-90deg)  translateX(-50%)     translateZ(0.1px); }
+  100% { transform: rotateY(-155deg) translateX(-100%)    translateZ(0.1px); }
+}
+
+/* -------- Elementos decorativos de la primera página -------- */
+.card-wrapper .text-one{
+  position:absolute; top:30px; width:300px;
+  color:#333; font-size:28px; text-align:center;
+}
+.card-wrapper .text-one:before{
+  content:"MON COEUR"; position:absolute; top:70px;
+  color:#ffb600; font-weight:bold; width:300px; left:5px;
+}
+.card-wrapper .text-one:after{
+  content:"Birthday"; position:absolute; top:35px; width:300px; left:5px;
+}
+
+.card-wrapper .heart-card{
+  position:relative; top:180px; left:120px;
+  width:60px; height:60px; background:#ffd84d;
+  transform:rotate(-45deg); animation:.8s beat infinite;
+}
+.card-wrapper .heart-card:before,
+.card-wrapper .heart-card:after{
+  content:""; position:absolute; width:60px; height:60px; background:#ffd84d; border-radius:50%;
+}
+.card-wrapper .heart-card:before{ top:-30px; left:0; }
+.card-wrapper .heart-card:after { left:30px; top:0; }
+
+.card-wrapper .smile{
+  position:absolute; top:200px; left:135px;
+  width:30px; height:15px; background:#333; z-index:1;
+  border-radius:0 0 100px 100px; overflow:hidden;
+}
+.card-wrapper .smile:before{
+  content:""; position:absolute; width:20px; height:20px; top:5px; left:5px;
+  background:#000; border-radius:50%;
+}
+.card-wrapper .eyes{
+  position:absolute; top:190px; left:165px;
+  width:10px; height:10px; background:#333; border-radius:50%;
+  box-shadow:-40px 0 #333; transform-origin:50%; animation:close 2s infinite;
+}
+
+/* decorativas */
+@keyframes close{ 0%,100%{transform:scale(1,.05)} 5%,95%{transform:scale(1,1)} }
+@keyframes beat { 0%,40%,100%{transform:scale(1) rotate(-45deg)} 25%,60%{transform:scale(1.1) rotate(-45deg)} }
+
+/* Nota de la tapa (si la usás) */
+.card-wrapper .note{
+  position:relative; width:200px; height:150px;
+  background:#fffdf2; top:75px; left:50px;
+  color:#333; font-size:26px; display:flex; align-items:center; text-align:center;
+  filter:drop-shadow(0 0 20px rgba(0,0,0,.3));
+  border:3px dashed #ffcc33;
+}
+.card-wrapper .note:before,
+.card-wrapper .note:after{
+  content:""; position:absolute; width:40px; height:40px; background:#ffcc33;
+}
+.card-wrapper .note:before{ transform:rotate(-45deg); top:-20px; left:80px; }
+.card-wrapper .note:after { border-radius:50%; top:-35px; left:65px; box-shadow:30px 0 #ffcc33; }
+
+.card-next{
+  text-align:center;
+  margin-top:20px;
+}
+.card-next .flow-next{
+  padding:.6rem 1.2rem;
+  border:0;
+  border-radius:999px;
+  background:var(--yellow-accent);
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
+  transition:background .2s;
+}
+.card-next .flow-next:hover{ background:var(--yellow-hover); }
+
+
